@@ -13,17 +13,17 @@ import datetime as dt  # importação da biblioteca de horas.
 HOST = '127.0.0.1'
 PORT = 65432
 
-# Criando socket para criar a conexão cliente-servidor.
+#Estabelecendo conexão IPV4 e TCP.
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))  # Mostrando qual host e qual porta irão fazer conexão.
-    s.listen() # Mostrando quantas conexões irão enfileirar, neste caso, quantas requisições forem precisas.
+    s.bind((HOST, PORT))  # Associa o socket a uma porta e um host.
+    s.listen() # Aguardando conexão de clientes
     conn, addr = s.accept() # Aceitando conexões.
     with conn:
         while True: # Se tiver conexão...
-            data = conn.recv(1024)
-            print(data) # Imprime o horário.
-            if not data: # Se não houver conexão, não irá imprimir.
+            data = conn.recv(1024) # Recebe dados de cliente de acordo com o buffer.
+            print(data) # Imprime a mensagem recebida do cliente.
+            if not data: # Se não houver dados, não irá imprimir.
                 break
             str = ("Oi cliente, tudo bem? Obrigado pela mensagem. Minha hora e : %s:%s" % (
-            dt.datetime.now().hour, dt.datetime.now().minute)) # Mensagem que será exibida na tela, caso encontre conexão.
-            conn.sendall(str.encode('ascii'))
+            dt.datetime.now().hour, dt.datetime.now().minute))
+            conn.sendall(str.encode('ascii')) # Envia resposta ao cliente.

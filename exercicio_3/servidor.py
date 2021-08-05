@@ -20,28 +20,27 @@ class ThreadCliente(Thread):
 
     def run(self):
         while True:
-            data = conn.recv(1024)
+            data = conn.recv(1024) # Recebe dados de acordo com o buffer. Neste caso, 1024 bits.
             if not data:
                 break
-            print(data)
+            print(data) #Imprime dados da requisição.
             str = ("hora de antendimento: %s:%s" % (dt.datetime.now().hour, dt.datetime.now().minute))
-            conn.sendall(str.encode('ascii'))
+            conn.sendall(str.encode('ascii')) # Envia resposta ao cliente.
 
-# definindo servidor, porta e recebimento de dados antes de execução.
+# definindo servidor e porta.
 HOST = '127.0.0.1'
 PORTA = 65432
-BUFFER = 1024
 
-#Estabelecendo conexão TCP.
+#Estabelecendo conexão IPV4 e TCP.
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind((HOST, PORTA))
-    threads = [] # Buscando a thread de clientes.
+    s.bind((HOST, PORTA)) # Associa um host a uma porta.
+    threads = [] # Instanciando uma lista de threads.
 
     while True:
-        s.listen(4) # Definição de quantas aplicações estão rodando.
-        print("server up") #Retorno caso haja conexão.
+        s.listen(4) # Deixa o socket aberto aguardando conexões.
+        print("server up") # Retorno caso haja conexão, confirmando que o servidor está ok.
         conn, addr = s.accept() # Aceitando conexão.
-        n_thread = ThreadCliente(addr) # Buscando endereço de cada cliente.
+        n_thread = ThreadCliente(addr) # Inicia endereço de cada cliente.
         n_thread.start() # Startando a thread.
         threads.append(n_thread) # Dando sequência a lista de clientes

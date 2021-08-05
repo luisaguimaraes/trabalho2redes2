@@ -13,10 +13,11 @@ import datetime as dt  # importação da biblioteca de horas.
 HOST = '127.0.0.1'
 PORTA = 65432
 
+#Estabelecendo conexão IPV4 e UDP.
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
 
     str = ("Cliente B, hora da requisicao: %s:%s" % (dt.datetime.now().hour, dt.datetime.now().minute))
-    s.sendto(str.encode('ascii'), (HOST, PORT))
-    data, addr = s.recvfrom(1024)
+    s.sendto(str.encode('ascii'), (HOST, PORTA))  # Envia a requisição ao servidor.
+    data, addr = s.recvfrom(1024)  # Recebe a resposta do servidor.
 
-print(data)
+print(data)  # Imprime os dados da resposta.

@@ -23,25 +23,24 @@ class ThreadCliente(Thread): # Criando a thread de clientes, para processar mais
         while True:
             if not self.data:
                 break
-            print(self.data)
+            print(self.data) # Imprime os dados recebidos do cliente.
             str = ("hora de antendimento: %s:%s" % (dt.datetime.now().hour, dt.datetime.now().minute))
-            s.sendto(str.encode('ascii'), (self.host, self.porta)) # enviando requisição em Ascii.
+            s.sendto(str.encode('ascii'), (self.host, self.porta)) # enviando resposta para o cliente.
             break
 
 
-# definindo servidor, porta e recebimento de dados antes de execução.
+# definindo servidor e porta.
 HOST = '127.0.0.1'
 PORTA = 65431
-BUFFER = 1024
 
-#Estabelecendo conexão TCP.
+#Estabelecendo conexão IPV4 e UDP.
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind((HOST, PORTA))
+    s.bind((HOST, PORTA)) # Associa o socket a um host e uma porta específica.
     threads = [] # Buscando a thread de clientes.
 
     while True:
-        data = s.recvfrom(1024) #Retorno da conexão.
+        data = s.recvfrom(1024) # Recebe dados de acordo com o tamanho do buffer. (Nesse caso, 1024 bits)
         n_thread = ThreadCliente(data[1][0], data[1][1], data[0])
         n_thread.start() # Startando a thread.
-        threads.append(n_thread) # Dando sequência a lista de clientes
+        threads.append(n_thread) # Associa uma thread a um cliente
